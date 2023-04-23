@@ -1,0 +1,29 @@
+# Базовый образ Alpine
+FROM alpine
+
+# Установка NGINX
+RUN apk update && apk add --no-cache nginx 
+
+# Добавление группы nginx в группу root
+RUN addgroup nginx root
+
+# Копирование файлов
+COPY ./materials06/nginx/nginx.conf /etc/nginx/nginx.conf
+COPY ./materials06/entrypoint.sh /home/entrypoint.sh
+
+
+
+# Изменение владельца всех директорий на nginx
+RUN for i in $(find /* -type d 2> dev/null); do chown -R nginx:nginx $i 2> dev/null; done
+
+# Установка пользователя nginx
+USER nginx
+
+# Установка рабочей директории
+WORKDIR /home/
+
+# Задание команды для запуска
+CMD ["sh", "/home/entrypoint.sh"]
+
+# Проверка работоспособности контейнера
+HEALTHCHECK --interval=1m --timeout=5s --retries=3 CMD curl -f http://localhost/ || exit 1

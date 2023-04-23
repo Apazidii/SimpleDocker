@@ -1,0 +1,19 @@
+# Базовый образ: NGINX
+FROM nginx
+
+# Установка пользователя
+USER root
+
+# Копирование файлов
+COPY ./materials/nginx/nginx.conf /etc/nginx/nginx.conf
+COPY ./materials/server.c /home/server.c
+COPY ./materials/entrypoint.sh /home/entrypoint.sh
+
+# Установка зависимостей
+RUN apt update && apt install -y gcc spawn-fcgi libfcgi-dev
+
+# Установка рабочей директории
+WORKDIR /home/
+
+# Запуск скрипта
+CMD ["/home/entrypoint.sh"]

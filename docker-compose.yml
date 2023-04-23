@@ -1,0 +1,13 @@
+
+version: "3.6"
+services:  
+  server: 
+    build:
+      context: .
+      dockerfile: Dockerfile_05
+  proxy: 
+    build:
+      context: .
+      dockerfile: Dockerfile_06
+    ports: 
+      - 80:8080
